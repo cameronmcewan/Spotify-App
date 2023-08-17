@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from flask_cors import cross_origin
 from dotenv import load_dotenv
 import os
 import base64
@@ -66,6 +67,8 @@ for idx, song in enumerate(songs):
 
 
 @app.route('/search', methods=['GET'])
+@cross_origin(origins=["http://localhost:3000"])
+
 def search():
     token = get_token()
     artist_name = request.args.get('name')
