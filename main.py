@@ -54,7 +54,8 @@ def get_songs_by_artist(token, artist_id):
 
 
 token = get_token()
-result = search_for_artist(token, "ACDC")
+artist_name = input("Enter the name of the artist: ")
+result = search_for_artist(token, artist_name)
 artist_id = result["id"]
 songs = get_songs_by_artist(token, artist_id)
 
