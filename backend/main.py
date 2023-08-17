@@ -1,9 +1,11 @@
+from flask import Flask, jsonify, request
 from dotenv import load_dotenv
 import os
 import base64
 from requests import post, get
 import json
 
+app = Flask(__name__)
 load_dotenv()
 
 client_id = os.getenv("CLIENT_ID")
@@ -61,3 +63,21 @@ songs = get_songs_by_artist(token, artist_id)
 
 for idx, song in enumerate(songs):
     print(f"{idx + 1}, {song['name']}")
+
+
+@app.route('/search', methods=['GET'])
+def search():
+    token = get_token()
+    artist_name = request.args.get('name')
+    if not artist_name:
+        return jsonify({"error": "Artist name is required"}), 400
+
+    artist = search_for_artist(token, artist_name)
+    if not artist:
+        return jsonify({"error": f"No artist found for name {artist_name}"}), 404
+    
+    songs = get_songs_by_artist(token, artist["id"])
+    return jsonify(songs)
+
+if __name__ == "__main__":
+    app.run(port=5000)
